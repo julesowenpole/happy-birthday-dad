@@ -9,18 +9,19 @@ body {
     margin: 20px auto;
     border: 2px solid black;
     position: relative;
+    overflow: hidden;
 }
 
+/* Player plate */
 #player {
     width: 100px;
     height: 20px;
-    margin: auto;
+    background-color: blue;
+    position: absolute;
+    bottom: 10px;
+    left: 250px;
 }
 
 .hidden {
     display: none;
-}
-
-#card-section {
-    margin-top: 40px;
 }

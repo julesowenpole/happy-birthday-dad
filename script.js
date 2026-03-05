@@ -1,4 +1,3 @@
-// Game state
 let score = 0;
 
 // DOM references
@@ -10,34 +9,38 @@ const gameSection = document.getElementById("game-section");
 const playAgainButton = document.getElementById("play-again");
 
 
+// Player position
+let playerX = 250;
+const playerSpeed = 20;
+
+
 // Initialize game
 function initGame() {
     console.log("Game initialized");
 }
 
 
-// Spawn falling cake
-function spawnCake() {
-    console.log("Cake spawned");
-}
-
-
 // Move player
 function movePlayer(event) {
-    console.log("Player moved:", event.key);
-}
 
+    const gameWidth = gameArea.offsetWidth;
+    const playerWidth = player.offsetWidth;
 
-// Check collision
-function checkCollision() {
-    console.log("Checking collision");
-}
+    if (event.key === "ArrowLeft") {
+        playerX -= playerSpeed;
+    }
 
+    if (event.key === "ArrowRight") {
+        playerX += playerSpeed;
+    }
 
-// End game and show card
-function showBirthdayCard() {
-    gameSection.classList.add("hidden");
-    cardSection.classList.remove("hidden");
+    // Prevent leaving game area
+    if (playerX < 0) playerX = 0;
+    if (playerX > gameWidth - playerWidth) {
+        playerX = gameWidth - playerWidth;
+    }
+
+    player.style.left = playerX + "px";
 }
 
 
