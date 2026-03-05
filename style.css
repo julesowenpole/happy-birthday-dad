@@ -25,3 +25,12 @@ body {
 .hidden {
     display: none;
 }
+
+.cake {
+    width: 40px;
+    height: 40px;
+    background-color: pink;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+}
