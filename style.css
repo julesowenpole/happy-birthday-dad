@@ -1,0 +1,26 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+#game-area {
+    width: 600px;
+    height: 400px;
+    margin: 20px auto;
+    border: 2px solid black;
+    position: relative;
+}
+
+#player {
+    width: 100px;
+    height: 20px;
+    margin: auto;
+}
+
+.hidden {
+    display: none;
+}
+
+#card-section {
+    margin-top: 40px;
+}
