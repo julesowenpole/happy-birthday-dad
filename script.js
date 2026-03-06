@@ -41,6 +41,81 @@ function movePlayer(event) {
     player.style.left = playerX + "px";
 }
 
+// Start game
+let spawnInterval = null;
+
+function initGame() {
+
+    console.log("Game started");
+
+    document.getElementById("bg-music").play().catch(() => {});
+
+    if (spawnInterval) clearInterval(spawnInterval);
+
+    candleMode = false;
+    activeItem = null;
+
+    spawnInterval = setInterval(() => {
+
+        if (!candleMode) {
+            spawnCake();
+        }
+        else if (activeItem === null) {
+            spawnCake();
+        }
+
+    }, spawnRate);
+
+    startButton.style.display = "none";
+}
+
+function checkCollision(item) {
+
+    const itemRect = item.getBoundingClientRect();
+    const playerRect = player.getBoundingClientRect();
+
+    const stackTop = getStackTop();
+
+    const horizontalHit =
+        itemRect.right > playerRect.left &&
+        itemRect.left < playerRect.right;
+
+    const verticalHit =
+        itemRect.bottom >= stackTop &&
+        itemRect.bottom <= stackTop + 10;
+
+    return horizontalHit && verticalHit;
+}
+
+// Restart game
+function restartGame() {
+
+    // Stop spawning
+    if (spawnInterval) {
+        clearInterval(spawnInterval);
+        spawnInterval = null;
+    }
+
+    // Remove any falling items
+    document.querySelectorAll(".cake, .candle").forEach(el => el.remove());
+
+    // Reset game state
+    score = 0;
+    stackedCakes = 0;
+    candleMode = false;
+    activeItem = null;
+
+    // Clear stack container
+    cakeStack.innerHTML = "";
+
+    // Show game again
+    document.getElementById("card-section").classList.add("hidden");
+    document.getElementById("game-section").classList.remove("hidden");
+    document.getElementById("celebration")?.remove();
+
+    // Restart game loop
+    initGame();
+}
 
 // Spawn cakes or candles
 function spawnCake() {
@@ -103,10 +178,7 @@ function spawnCake() {
 
 function catchCake() {
 
-    //score++;
     stackedCakes++;
-
-    //scoreDisplay.textContent = "Score: " + score;
 
     const stack = document.createElement("div");
     stack.classList.add("stacked-cake", "snap-land");
@@ -123,91 +195,14 @@ function catchCake() {
     }
 }
 
-// Start game
-let spawnInterval = null;
+function getStackTop() {
 
-function initGame() {
-
-    console.log("Game started");
-
-    document.getElementById("bg-music").play().catch(() => {});
-
-    if (spawnInterval) clearInterval(spawnInterval);
-
-    candleMode = false;
-    activeItem = null;
-
-    spawnInterval = setInterval(() => {
-
-        if (!candleMode) {
-            spawnCake();
-        }
-        else if (activeItem === null) {
-            spawnCake();
-        }
-
-    }, spawnRate);
-
-    startButton.style.display = "none";
-}
-
-
-// Restart game
-function restartGame() {
-
-    // Stop spawning
-    if (spawnInterval) {
-        clearInterval(spawnInterval);
-        spawnInterval = null;
-    }
-
-    // Remove any falling items
-    document.querySelectorAll(".cake, .candle").forEach(el => el.remove());
-
-    // Reset game state
-    score = 0;
-    stackedCakes = 0;
-    candleMode = false;
-    activeItem = null;
-
-    //scoreDisplay.textContent = "Score: 0";
-
-    // Clear stack container
-    cakeStack.innerHTML = "";
-
-    // Show game again
-    document.getElementById("card-section").classList.add("hidden");
-    document.getElementById("game-section").classList.remove("hidden");
-    document.getElementById("celebration")?.remove();
-
-    // Restart game loop
-    initGame();
-}
-
-function checkCollision(item) {
-
-    const itemRect = item.getBoundingClientRect();
     const playerRect = player.getBoundingClientRect();
 
-    const stackTop = getStackTop();
+    const cakeHeight = 25;
+    const stackHeight = stackedCakes * cakeHeight;
 
-    const horizontalHit =
-        itemRect.right > playerRect.left &&
-        itemRect.left < playerRect.right;
-
-    const verticalHit =
-        itemRect.bottom >= stackTop &&
-        itemRect.bottom <= stackTop + 10;
-
-    return horizontalHit && verticalHit;
-}
-
-function showBirthdayCard() {
-
-    clearInterval(spawnInterval);
-
-    document.getElementById("game-section").classList.add("hidden");
-    document.getElementById("card-section").classList.remove("hidden");
+    return playerRect.top - stackHeight;
 }
 
 function placeCandle() {
@@ -235,14 +230,12 @@ function showCelebration() {
     }, 2000);
 }
 
-function getStackTop() {
+function showBirthdayCard() {
 
-    const playerRect = player.getBoundingClientRect();
+    clearInterval(spawnInterval);
 
-    const cakeHeight = 25;
-    const stackHeight = stackedCakes * cakeHeight;
-
-    return playerRect.top - stackHeight;
+    document.getElementById("game-section").classList.add("hidden");
+    document.getElementById("card-section").classList.remove("hidden");
 }
 
 // Event listeners
