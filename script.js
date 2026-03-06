@@ -1,26 +1,19 @@
 let score = 0;
+let candleMode = false;
 
 // DOM references
 const scoreDisplay = document.getElementById("score");
 const gameArea = document.getElementById("game-area");
 const player = document.getElementById("player");
-const cardSection = document.getElementById("card-section");
-const gameSection = document.getElementById("game-section");
 const playAgainButton = document.getElementById("play-again");
+const startButton = document.getElementById("start-button");
+
 const cakeSpeed = 3;
 const spawnRate = 1000;
-
 
 // Player position
 let playerX = 250;
 const playerSpeed = 20;
-
-
-// Initialize game
-function initGame() {
-    console.log("Game initialized");
-}
-
 
 // Move player
 function movePlayer(event) {
@@ -36,8 +29,8 @@ function movePlayer(event) {
         playerX += playerSpeed;
     }
 
-    // Prevent leaving game area
     if (playerX < 0) playerX = 0;
+
     if (playerX > gameWidth - playerWidth) {
         playerX = gameWidth - playerWidth;
     }
@@ -46,54 +39,56 @@ function movePlayer(event) {
 }
 
 
-// Restart game
-function restartGame() {
-    console.log("Restarting game");
-}
-
+// Spawn cakes or candles
 function spawnCake() {
 
-    const cake = document.createElement("div");
-    cake.classList.add("cake");
+    const item = document.createElement("div");
+
+    if (candleMode) {
+        item.classList.add("candle");
+    } else {
+        item.classList.add("cake");
+    }
 
     const gameWidth = gameArea.offsetWidth;
-
     const randomX = Math.random() * (gameWidth - 40);
-    cake.style.left = randomX + "px";
 
-    gameArea.appendChild(cake);
+    item.style.left = randomX + "px";
 
-    let cakeY = 0;
+    gameArea.appendChild(item);
+
+    let itemY = 0;
 
     const fallInterval = setInterval(() => {
 
-        cakeY += cakeSpeed;
-        cake.style.top = cakeY + "px";
-    
-        if (checkCollision(cake)) {
-    
+        itemY += cakeSpeed;
+        item.style.top = itemY + "px";
+
+        if (checkCollision(item)) {
+
             score++;
             scoreDisplay.textContent = "Score: " + score;
-    
-            cake.remove();
+
+            // After 3 cakes, switch to candle mode
+            if (score >= 3) {
+                candleMode = true;
+            }
+
+            item.remove();
             clearInterval(fallInterval);
             return;
         }
-    
-        if (cakeY > gameArea.offsetHeight) {
-            cake.remove();
+
+        if (itemY > gameArea.offsetHeight) {
+            item.remove();
             clearInterval(fallInterval);
         }
-    
+
     }, 20);
 }
 
-// Event listeners
-document.addEventListener("keydown", movePlayer);
-playAgainButton.addEventListener("click", restartGame);
 
-const startButton = document.getElementById("start-button");
-
+// Start game
 let spawnInterval = null;
 
 function initGame() {
@@ -105,24 +100,39 @@ function initGame() {
     startButton.style.display = "none";
 }
 
-startButton.addEventListener("click", initGame);
 
-// Start game
-function initGame() {
-    console.log("Game initialized");
+// Restart game
+function restartGame() {
 
-    setInterval(spawnCake, spawnRate);
+    score = 0;
+    candleMode = false;
+
+    scoreDisplay.textContent = "Score: 0";
+
+    document.querySelectorAll(".cake, .candle").forEach(el => el.remove());
+
+    clearInterval(spawnInterval);
+
+    initGame();
 }
 
-function checkCollision(cake) {
 
-    const cakeRect = cake.getBoundingClientRect();
+// Collision detection
+function checkCollision(item) {
+
+    const itemRect = item.getBoundingClientRect();
     const playerRect = player.getBoundingClientRect();
 
     return !(
-        cakeRect.bottom < playerRect.top ||
-        cakeRect.top > playerRect.bottom ||
-        cakeRect.right < playerRect.left ||
-        cakeRect.left > playerRect.right
+        itemRect.bottom < playerRect.top ||
+        itemRect.top > playerRect.bottom ||
+        itemRect.right < playerRect.left ||
+        itemRect.left > playerRect.right
     );
 }
+
+
+// Event listeners
+document.addEventListener("keydown", movePlayer);
+playAgainButton.addEventListener("click", restartGame);
+startButton.addEventListener("click", initGame);

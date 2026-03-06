@@ -27,10 +27,39 @@ body {
 }
 
 .cake {
-    width: 40px;
-    height: 40px;
-    background-color: pink;
-    border-radius: 10px;
     position: absolute;
+    width: 70px;
+    height: 25px;
+    background: #e5c17e;
+    border-radius: 10px;
     top: 0;
+}
+
+.stacked-cake {
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    background: #f5deb3;
+    border-radius: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.candle {
+    position: absolute;
+    width: 10px;
+    height: 30px;
+    background: #ff6b6b;
+    border-radius: 3px;
+    top: 0;
+}
+
+.icing {
+    position: absolute;
+    width: 6px;
+    height: 12px;
+    background: white;
+    border-radius: 3px;
+    top: 0;
+    opacity: 0.9;
 }
