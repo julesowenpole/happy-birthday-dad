@@ -12,6 +12,7 @@ const cakeStack = document.getElementById("cake-stack");
 const cakeSpeed = 3;
 const spawnRate = 1000;
 let stackedCakes = 0;
+let activeItem = null;
 
 // Player position
 let playerX = 250;
@@ -44,6 +45,11 @@ function movePlayer(event) {
 // Spawn cakes or candles
 function spawnCake() {
 
+    // Prevent multiple items at once in candle mode
+    if (candleMode && activeItem !== null) {
+        return;
+    }
+
     const item = document.createElement("div");
 
     if (candleMode) {
@@ -51,6 +57,8 @@ function spawnCake() {
     } else {
         item.classList.add("cake");
     }
+
+    activeItem = item;
 
     const gameWidth = gameArea.offsetWidth;
     const randomX = Math.random() * (gameWidth - 40);
@@ -71,19 +79,23 @@ function spawnCake() {
             if (item.classList.contains("cake")) {
                 catchCake();
             }
-            
+
             if (item.classList.contains("candle")) {
                 placeCandle();
             }
 
             item.remove();
             clearInterval(fallInterval);
+
+            activeItem = null;
             return;
         }
 
         if (itemY > gameArea.offsetHeight) {
             item.remove();
             clearInterval(fallInterval);
+
+            activeItem = null;
         }
 
     }, 20);
@@ -97,9 +109,14 @@ function catchCake() {
     scoreDisplay.textContent = "Score: " + score;
 
     const stack = document.createElement("div");
-    stack.classList.add("stacked-cake");
+    stack.classList.add("stacked-cake", "snap-land");
 
     cakeStack.appendChild(stack);
+
+    // Remove animation class after it plays once
+    setTimeout(() => {
+        stack.classList.remove("snap-land");
+    }, 200);
 
     if (stackedCakes >= 3) {
         candleMode = true;
@@ -113,7 +130,21 @@ function initGame() {
 
     console.log("Game started");
 
-    spawnInterval = setInterval(spawnCake, spawnRate);
+    if (spawnInterval) clearInterval(spawnInterval);
+
+    candleMode = false;
+    activeItem = null;
+
+    spawnInterval = setInterval(() => {
+
+        if (!candleMode) {
+            spawnCake();
+        }
+        else if (activeItem === null) {
+            spawnCake();
+        }
+
+    }, spawnRate);
 
     startButton.style.display = "none";
 }
@@ -122,17 +153,32 @@ function initGame() {
 // Restart game
 function restartGame() {
 
+    // Stop spawning
+    if (spawnInterval) {
+        clearInterval(spawnInterval);
+        spawnInterval = null;
+    }
+
+    // Remove any falling items
+    document.querySelectorAll(".cake, .candle").forEach(el => el.remove());
+
+    // Reset game state
     score = 0;
-    candleMode = false;
-    cakeStack.innerHTML = "";
     stackedCakes = 0;
+    candleMode = false;
+    activeItem = null;
 
     scoreDisplay.textContent = "Score: 0";
 
-    document.querySelectorAll(".cake, .candle").forEach(el => el.remove());
+    // Clear stack container
+    cakeStack.innerHTML = "";
 
-    clearInterval(spawnInterval);
+    // Show game again
+    document.getElementById("card-section").classList.add("hidden");
+    document.getElementById("game-section").classList.remove("hidden");
+    document.getElementById("celebration")?.remove();
 
+    // Restart game loop
     initGame();
 }
 
