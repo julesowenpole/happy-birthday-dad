@@ -1,6 +1,9 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Dancing Script", cursive;
     text-align: center;
+    background: #ffe9f0;
+    margin: 0;
+    color: #444;
 }
 
 #game-area {
@@ -15,8 +18,8 @@ body {
 /* Player plate */
 #player {
     width: 100px;
-    height: 20px;
-    background-color: blue;
+    height: 10px;
+    background-color: plum;
     position: absolute;
     bottom: 10px;
     left: 250px;
@@ -115,4 +118,25 @@ body {
     100% {
         transform: translateY(0px) scaleY(1);
     }
+}
+
+button {
+    font-family: "Nunito", sans-serif;
+    font-size: 18px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: none;
+    background: #ff8fab;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+button:active {
+    transform: translateY(1px);
 }

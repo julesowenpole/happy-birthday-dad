@@ -1,6 +1,3 @@
-let score = 0;
-let candleMode = false;
-
 // DOM references
 const scoreDisplay = document.getElementById("score");
 const gameArea = document.getElementById("game-area");
@@ -9,10 +6,13 @@ const playAgainButton = document.getElementById("play-again");
 const startButton = document.getElementById("start-button");
 const cakeStack = document.getElementById("cake-stack");
 
+
 const cakeSpeed = 3;
 const spawnRate = 1000;
 let stackedCakes = 0;
 let activeItem = null;
+let candleMode = false;
+
 
 // Player position
 let playerX = 250;
@@ -103,10 +103,10 @@ function spawnCake() {
 
 function catchCake() {
 
-    score++;
+    //score++;
     stackedCakes++;
 
-    scoreDisplay.textContent = "Score: " + score;
+    //scoreDisplay.textContent = "Score: " + score;
 
     const stack = document.createElement("div");
     stack.classList.add("stacked-cake", "snap-land");
@@ -129,6 +129,8 @@ let spawnInterval = null;
 function initGame() {
 
     console.log("Game started");
+
+    document.getElementById("bg-music").play().catch(() => {});
 
     if (spawnInterval) clearInterval(spawnInterval);
 
@@ -168,7 +170,7 @@ function restartGame() {
     candleMode = false;
     activeItem = null;
 
-    scoreDisplay.textContent = "Score: 0";
+    //scoreDisplay.textContent = "Score: 0";
 
     // Clear stack container
     cakeStack.innerHTML = "";

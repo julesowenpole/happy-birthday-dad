@@ -9,15 +9,15 @@
 <body>
 
     <header>
-        <h1>Catch the Birthday Cake 🎂</h1>
+        <h1>Make your own birthday cake</h1>
     </header>
 
     <!-- GAME AREA -->
     <section id="game-section">
 
-        <button id="start-button">Start Game</button>
+        <button id="start-button">Start!</button>
     
-        <div id="score">Score: 0</div>
+        <div id="score"></div>
         
         <div id="game-area">
             <div id="player">
@@ -32,12 +32,17 @@
     <section id="card-section" class="hidden">
         <div id="card">
             <h2>Happy Birthday, Dad!</h2>
-            <p id="card-message"></p>
-            <button id="play-again">Play Again</button>
+            <p id="card-message">Dad,<br>Happy Birthday! I love you tons and I miss you, hope you have a good day!!</p>
+            <p>Lots of Love, Jules, Zach, Ben, and Max</p>
+            <p>💩 And Jasper!</p>
+            <button id="play-again">Play Again!</button>
         </div>
     </section>
 
     <script src="script.js"></script>
+    <audio id="bg-music" loop>
+        <source src="happy_birthday.mp3" type="audio/mpeg">
+    </audio>
 
 </body>
 </html>
