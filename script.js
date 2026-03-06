@@ -10,6 +10,7 @@ const startButton = document.getElementById("start-button");
 
 const cakeSpeed = 3;
 const spawnRate = 1000;
+let stackedCakes = 0;
 
 // Player position
 let playerX = 250;
@@ -66,12 +67,12 @@ function spawnCake() {
 
         if (checkCollision(item)) {
 
-            score++;
-            scoreDisplay.textContent = "Score: " + score;
-
-            // After 3 cakes, switch to candle mode
-            if (score >= 3) {
-                candleMode = true;
+            if (item.classList.contains("cake")) {
+                catchCake();
+            }
+            
+            if (item.classList.contains("candle")) {
+                showBirthdayCard();
             }
 
             item.remove();
@@ -87,6 +88,26 @@ function spawnCake() {
     }, 20);
 }
 
+function catchCake() {
+
+    score++;
+    stackedCakes++;
+
+    scoreDisplay.textContent = "Score: " + score;
+
+    const stack = document.createElement("div");
+    stack.classList.add("stacked-cake");
+
+    const height = stackedCakes * 32;
+
+    stack.style.bottom = 30 + height + "px";
+
+    gameArea.appendChild(stack);
+
+    if (stackedCakes >= 3) {
+        candleMode = true;
+    }
+}
 
 // Start game
 let spawnInterval = null;
@@ -131,6 +152,13 @@ function checkCollision(item) {
     );
 }
 
+function showBirthdayCard() {
+
+    clearInterval(spawnInterval);
+
+    document.getElementById("game-section").classList.add("hidden");
+    document.getElementById("card-section").classList.remove("hidden");
+}
 
 // Event listeners
 document.addEventListener("keydown", movePlayer);
